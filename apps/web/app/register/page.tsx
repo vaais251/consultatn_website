@@ -2,18 +2,27 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-export default function LoginPage() {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-    const registered = searchParams.get("registered");
+const countries = [
+    "United States", "United Kingdom", "Canada", "Australia", "Germany",
+    "France", "Netherlands", "Japan", "South Korea", "China",
+    "India", "Pakistan", "UAE", "Saudi Arabia", "Turkey",
+    "Malaysia", "Singapore", "Thailand", "Indonesia", "Brazil",
+    "Other",
+];
 
+export default function RegisterPage() {
+    const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const [form, setForm] = useState({ email: "", password: "" });
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        password: "",
+        country: "",
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -21,20 +30,33 @@ export default function LoginPage() {
         setError("");
 
         try {
-            const result = await signIn("credentials", {
+            const res = await fetch("/api/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.error || "Registration failed");
+                setIsLoading(false);
+                return;
+            }
+
+            // Auto sign-in after successful registration
+            const signInResult = await signIn("credentials", {
                 email: form.email,
                 password: form.password,
                 redirect: false,
             });
 
-            if (result?.error) {
-                setError("Invalid email or password");
-                setIsLoading(false);
-                return;
+            if (signInResult?.error) {
+                // Registration succeeded but auto-login failed → redirect to login
+                router.push("/login?registered=true");
+            } else {
+                router.push("/dashboard");
             }
-
-            router.push(callbackUrl);
-            router.refresh();
         } catch {
             setError("Something went wrong. Please try again.");
             setIsLoading(false);
@@ -42,11 +64,11 @@ export default function LoginPage() {
     };
 
     const handleGoogleSignIn = () => {
-        signIn("google", { callbackUrl });
+        signIn("google", { callbackUrl: "/dashboard" });
     };
 
     return (
-        <section className="min-h-[80vh] flex items-center justify-center section-padding">
+        <section className="min-h-[85vh] flex items-center justify-center section-padding">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
@@ -54,18 +76,11 @@ export default function LoginPage() {
                             GB
                         </div>
                     </Link>
-                    <h1 className="text-3xl font-heading font-bold mb-2">Welcome Back</h1>
-                    <p className="text-slate-400">Sign in to book your next consultation</p>
+                    <h1 className="text-3xl font-heading font-bold mb-2">Create Your Account</h1>
+                    <p className="text-slate-400">Join thousands of travelers planning their GB adventure</p>
                 </div>
 
                 <div className="glass rounded-2xl p-8">
-                    {/* Success message from registration */}
-                    {registered && (
-                        <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm">
-                            Account created successfully! Please sign in.
-                        </div>
-                    )}
-
                     {/* Google OAuth */}
                     <button
                         type="button"
@@ -86,7 +101,7 @@ export default function LoginPage() {
                             <div className="w-full border-t border-white/10" />
                         </div>
                         <div className="relative flex justify-center text-xs">
-                            <span className="bg-navy-950 px-4 text-slate-500">or sign in with email</span>
+                            <span className="bg-navy-950 px-4 text-slate-500">or register with email</span>
                         </div>
                     </div>
 
@@ -98,6 +113,33 @@ export default function LoginPage() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="text-sm text-slate-400 block mb-1">Full Name</label>
+                            <input
+                                type="text"
+                                required
+                                value={form.name}
+                                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                placeholder="Your full name"
+                                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="text-sm text-slate-400 block mb-1">Country</label>
+                            <select
+                                required
+                                value={form.country}
+                                onChange={(e) => setForm({ ...form, country: e.target.value })}
+                                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-accent-400/50 transition-colors appearance-none"
+                            >
+                                <option value="" className="bg-navy-950">Select your country</option>
+                                {countries.map((c) => (
+                                    <option key={c} value={c} className="bg-navy-950">{c}</option>
+                                ))}
+                            </select>
+                        </div>
+
                         <div>
                             <label className="text-sm text-slate-400 block mb-1">Email</label>
                             <input
@@ -115,9 +157,10 @@ export default function LoginPage() {
                             <input
                                 type="password"
                                 required
+                                minLength={8}
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                placeholder="••••••••"
+                                placeholder="Min. 8 characters"
                                 className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors"
                             />
                         </div>
@@ -133,18 +176,18 @@ export default function LoginPage() {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                                     </svg>
-                                    Signing in...
+                                    Creating account...
                                 </span>
                             ) : (
-                                "Sign In"
+                                "Create Account"
                             )}
                         </button>
                     </form>
 
                     <p className="text-slate-500 text-sm text-center mt-6">
-                        Don&apos;t have an account?{" "}
-                        <Link href="/register" className="text-accent-400 hover:underline">
-                            Create one
+                        Already have an account?{" "}
+                        <Link href="/login" className="text-accent-400 hover:underline">
+                            Sign in
                         </Link>
                     </p>
                 </div>
@@ -155,13 +198,13 @@ export default function LoginPage() {
                         <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
-                        Secure login
+                        Secure registration
                     </div>
                     <div className="flex items-center gap-1">
                         <svg className="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
-                        We never store card details
+                        No card details stored
                     </div>
                 </div>
             </div>

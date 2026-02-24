@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -16,6 +17,8 @@ const navLinks = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass">
@@ -45,15 +48,37 @@ export default function Navbar() {
 
         {/* Auth Buttons (Desktop) */}
         <div className="hidden lg:flex items-center gap-3">
-          <Link
-            href="/login"
-            className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
-          >
-            Log In
-          </Link>
-          <Link href="/dashboard" className="btn-accent text-sm !py-2 !px-5">
-            Dashboard
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="btn-outline text-sm !py-2 !px-4"
+              >
+                Sign Out
+              </button>
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-400 flex items-center justify-center text-xs font-bold text-white">
+                {session.user?.name?.[0]?.toUpperCase() || "U"}
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
+              >
+                Log In
+              </Link>
+              <Link href="/register" className="btn-accent text-sm !py-2 !px-5">
+                Register
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Hamburger */}
@@ -63,28 +88,24 @@ export default function Navbar() {
           aria-label="Toggle navigation"
         >
           <span
-            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
-              isOpen ? "rotate-45 translate-y-2" : ""
-            }`}
+            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? "rotate-45 translate-y-2" : ""
+              }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
-              isOpen ? "opacity-0" : ""
-            }`}
+            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? "opacity-0" : ""
+              }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${
-              isOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
+            className={`block w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-2" : ""
+              }`}
           />
         </button>
       </nav>
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ${
-          isOpen ? "max-h-screen pb-6" : "max-h-0"
-        }`}
+        className={`lg:hidden overflow-hidden transition-all duration-300 ${isOpen ? "max-h-screen pb-6" : "max-h-0"
+          }`}
       >
         <div className="page-container flex flex-col gap-1 pt-2 border-t border-white/10">
           {navLinks.map((link) => (
@@ -98,20 +119,43 @@ export default function Navbar() {
             </Link>
           ))}
           <div className="flex gap-3 mt-4 px-4">
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="btn-outline text-sm !py-2 flex-1 text-center"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/dashboard"
-              onClick={() => setIsOpen(false)}
-              className="btn-accent text-sm !py-2 flex-1 text-center"
-            >
-              Dashboard
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="btn-accent text-sm !py-2 flex-1 text-center"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    signOut({ callbackUrl: "/" });
+                  }}
+                  className="btn-outline text-sm !py-2 flex-1 text-center"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="btn-outline text-sm !py-2 flex-1 text-center"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setIsOpen(false)}
+                  className="btn-accent text-sm !py-2 flex-1 text-center"
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

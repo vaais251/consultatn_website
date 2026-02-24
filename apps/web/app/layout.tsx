@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Providers from "./components/Providers";
 
 export const metadata: Metadata = {
   title: "GB Guide — Plan Gilgit-Baltistan with Local Experts",
@@ -34,9 +35,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1 pt-18">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-1 pt-18">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
