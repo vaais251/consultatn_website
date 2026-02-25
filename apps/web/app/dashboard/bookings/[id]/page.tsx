@@ -2,10 +2,11 @@ import { auth } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import PayNowButton from "./PayNowButton";
 
 interface Props {
     params: Promise<{ id: string }>;
-    searchParams: Promise<{ new?: string }>;
+    searchParams: Promise<{ new?: string; paid?: string; canceled?: string }>;
 }
 
 const statusColors: Record<string, string> = {
@@ -26,7 +27,7 @@ const statusLabels: Record<string, string> = {
 
 export default async function BookingDetailPage({ params, searchParams }: Props) {
     const { id } = await params;
-    const { new: isNew } = await searchParams;
+    const sp = await searchParams;
 
     const session = await auth();
     if (!session?.user) redirect("/login");
@@ -68,10 +69,25 @@ export default async function BookingDetailPage({ params, searchParams }: Props)
                     </Link>
                 </div>
 
-                {isNew && (
+                {/* Success / Cancel banners */}
+                {sp.new && (
                     <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3">
                         <span className="text-lg">🎉</span>
-                        Booking created successfully! Your slot is reserved.
+                        Booking created successfully! Your slot is reserved. Complete payment to confirm.
+                    </div>
+                )}
+
+                {sp.paid && booking.status === "CONFIRMED" && (
+                    <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-3">
+                        <span className="text-lg">✅</span>
+                        Payment successful! Your consultation is confirmed. Check your email for the meeting link.
+                    </div>
+                )}
+
+                {sp.canceled && (
+                    <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm flex items-center gap-3">
+                        <span className="text-lg">ℹ️</span>
+                        Payment was cancelled. You can try again anytime — your slot is still reserved.
                     </div>
                 )}
 
@@ -90,7 +106,7 @@ export default async function BookingDetailPage({ params, searchParams }: Props)
                         {/* Expert */}
                         <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5">
                             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-400 to-accent-500 flex items-center justify-center text-navy-950 font-bold text-lg shrink-0">
-                                {booking.expert.user.name.split(" ").map((w) => w[0]).join("")}
+                                {booking.expert.user.name.split(" ").map((w: string) => w[0]).join("")}
                             </div>
                             <div>
                                 <p className="font-medium text-white">{booking.expert.user.name}</p>
@@ -109,35 +125,63 @@ export default async function BookingDetailPage({ params, searchParams }: Props)
                             </p>
                         </div>
 
+                        {/* Payment Info */}
+                        {booking.payment && (
+                            <div className="p-4 rounded-xl bg-white/5">
+                                <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Payment</p>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-white font-medium">${booking.payment.amountUsd} USD</p>
+                                        <p className="text-slate-500 text-xs">via {booking.payment.provider}</p>
+                                    </div>
+                                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${booking.payment.status === "PAID"
+                                            ? "bg-emerald-500/20 text-emerald-400"
+                                            : booking.payment.status === "INITIATED"
+                                                ? "bg-amber-500/20 text-amber-400"
+                                                : "bg-slate-500/20 text-slate-400"
+                                        }`}>
+                                        {booking.payment.status}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Status Actions */}
                         {booking.status === "PENDING_PAYMENT" && (
-                            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
-                                <p className="text-amber-400 text-sm font-medium mb-2">💳 Payment Required</p>
+                            <div className="p-4 rounded-xl bg-accent-400/10 border border-accent-400/20">
+                                <p className="text-accent-400 text-sm font-medium mb-2">💳 Complete Your Payment</p>
                                 <p className="text-slate-400 text-xs mb-3">
-                                    Payment integration coming soon. Your slot is reserved in the meantime.
+                                    Secure checkout via Stripe. Your slot is reserved until you complete payment.
                                 </p>
-                                <button
-                                    disabled
-                                    className="btn-accent text-sm opacity-50 cursor-not-allowed"
-                                    title="Payment coming next"
-                                >
-                                    Pay Now (Coming Soon)
-                                </button>
+                                <PayNowButton bookingId={booking.id} />
                             </div>
                         )}
 
                         {booking.status === "CONFIRMED" && (
                             <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                                <p className="text-emerald-400 text-sm font-medium mb-2">✅ Confirmed</p>
+                                <p className="text-emerald-400 text-sm font-medium mb-2">✅ Consultation Confirmed</p>
                                 {booking.meetingLink ? (
-                                    <a
-                                        href={booking.meetingLink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="btn-accent text-sm"
-                                    >
-                                        Join Meeting
-                                    </a>
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-2 text-sm text-slate-300">
+                                            <span>🔗</span>
+                                            <a
+                                                href={booking.meetingLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-accent-400 hover:underline break-all"
+                                            >
+                                                {booking.meetingLink}
+                                            </a>
+                                        </div>
+                                        <a
+                                            href={booking.meetingLink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn-accent text-sm inline-block"
+                                        >
+                                            🎥 Join Meeting
+                                        </a>
+                                    </div>
                                 ) : (
                                     <p className="text-slate-400 text-xs">
                                         Meeting link will be sent before your session.

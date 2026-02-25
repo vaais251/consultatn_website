@@ -148,7 +148,25 @@ export default async function DashboardPage() {
                                                     {statusLabels[booking.status] || booking.status}
                                                 </span>
                                             </td>
-                                            <td className="py-3 px-4 text-right">
+                                            <td className="py-3 px-4 text-right space-x-2">
+                                                {booking.status === "PENDING_PAYMENT" && (
+                                                    <Link
+                                                        href={`/dashboard/bookings/${booking.id}`}
+                                                        className="inline-block px-3 py-1.5 rounded-lg bg-accent-400 text-navy-950 text-xs font-semibold hover:bg-accent-300 transition-colors"
+                                                    >
+                                                        💳 Pay Now
+                                                    </Link>
+                                                )}
+                                                {booking.status === "CONFIRMED" && booking.meetingLink && (
+                                                    <a
+                                                        href={booking.meetingLink}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="inline-block px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/30 transition-colors"
+                                                    >
+                                                        🎥 Join
+                                                    </a>
+                                                )}
                                                 <Link
                                                     href={`/dashboard/bookings/${booking.id}`}
                                                     className="text-accent-400 hover:text-accent-300 text-xs font-medium transition-colors"
