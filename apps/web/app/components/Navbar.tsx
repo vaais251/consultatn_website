@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "About & Experts", href: "/about" },
   { label: "Services", href: "/services" },
+  { label: "Experts", href: "/experts" },
   { label: "Destinations", href: "/destinations" },
   { label: "Visa & Logistics", href: "/visa" },
   { label: "Culture", href: "/preparation" },

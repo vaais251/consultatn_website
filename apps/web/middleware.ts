@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 // Routes that require authentication
-const protectedPrefixes = ["/dashboard"];
+const protectedPrefixes = ["/dashboard", "/book"];
 
 // Role-based route guards
 const roleRoutes: Record<string, string[]> = {
@@ -55,5 +55,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/admin/:path*", "/expert/:path*"],
+    matcher: ["/dashboard/:path*", "/admin/:path*", "/expert/:path*", "/book/:path*"],
 };

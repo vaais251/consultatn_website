@@ -19,10 +19,17 @@ enum Role {
 }
 
 enum BookingStatus {
-  PENDING
+  DRAFT
+  PENDING_PAYMENT
   CONFIRMED
-  COMPLETED
   CANCELLED
+  COMPLETED
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  BOOKED
+  BLOCKED
 }
 
 enum PaymentStatus {
@@ -52,10 +59,10 @@ model User {
   updatedAt    DateTime @updatedAt
 
   // Relations
-  clientProfile  ClientProfile?
-  expertProfile  ExpertProfile?
-  bookingsAsClient Booking[]  @relation("ClientBookings")
-  blogPosts      BlogPost[]
+  clientProfile    ClientProfile?
+  expertProfile    ExpertProfile?
+  bookingsAsClient Booking[] @relation("ClientBookings")
+  blogPosts        BlogPost[]
 
   // NextAuth Account & Session (for OAuth)
   accounts Account[]
@@ -112,7 +119,7 @@ model ClientProfile {
   id                String   @id @default(cuid())
   userId            String   @unique
   whatsappNumber    String?
-  travelPreferences String?  @db.Text // JSON string of preferences
+  travelPreferences String?  @db.Text
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -129,49 +136,70 @@ model ExpertProfile {
   photoUrl    String?
   bio         String?  @db.Text
   credentials String?  @db.Text
-  languages   String?  // comma-separated
+  languages   String?
   region      String?
   specialty   String?
+  hourlyRate  Float?   @default(50)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bookings Booking[] @relation("ExpertBookings")
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings          Booking[]          @relation("ExpertBookings")
+  availabilitySlots AvailabilitySlot[]
 
   @@map("expert_profiles")
 }
 
-// ─── Booking (placeholder) ──────────────────────────────
+// ─── Availability Slot ──────────────────────────────────
 
-model Booking {
-  id        String        @id @default(cuid())
-  clientId  String
+model AvailabilitySlot {
+  id        String             @id @default(cuid())
   expertId  String
   startAt   DateTime
   endAt     DateTime
-  status    BookingStatus @default(PENDING)
-  meetingLink String?
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  status    AvailabilityStatus @default(AVAILABLE)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 
-  client    User          @relation("ClientBookings", fields: [clientId], references: [id])
-  expert    ExpertProfile @relation("ExpertBookings", fields: [expertId], references: [id])
+  expert  ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  booking Booking?
+
+  @@index([expertId, startAt])
+  @@map("availability_slots")
+}
+
+// ─── Booking ────────────────────────────────────────────
+
+model Booking {
+  id          String        @id @default(cuid())
+  clientId    String
+  expertId    String
+  slotId      String        @unique
+  status      BookingStatus @default(PENDING_PAYMENT)
+  meetingLink String?
+  notes       String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  client              User                 @relation("ClientBookings", fields: [clientId], references: [id])
+  expert              ExpertProfile        @relation("ExpertBookings", fields: [expertId], references: [id])
+  slot                AvailabilitySlot     @relation(fields: [slotId], references: [id])
   preConsultationForm PreConsultationForm?
-  payment   Payment?
+  payment             Payment?
 
   @@map("bookings")
 }
 
-// ─── Pre-Consultation Form (placeholder) ────────────────
+// ─── Pre-Consultation Form ──────────────────────────────
 
 model PreConsultationForm {
   id          String   @id @default(cuid())
   bookingId   String   @unique
-  nationality String?
-  travelDates String?
-  interests   String?  @db.Text
-  questions   String?  @db.Text
+  nationality String
+  travelDates String
+  interests   String   @db.Text
+  questions   String   @db.Text
   createdAt   DateTime @default(now())
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
@@ -184,7 +212,7 @@ model PreConsultationForm {
 model Payment {
   id                String        @id @default(cuid())
   bookingId         String        @unique
-  provider          String        @default("stripe") // stripe, paypal, wise
+  provider          String        @default("stripe")
   amountUsd         Float
   currency          String        @default("USD")
   status            PaymentStatus @default(PENDING)
