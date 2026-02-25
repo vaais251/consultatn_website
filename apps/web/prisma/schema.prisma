@@ -33,6 +33,7 @@ enum AvailabilityStatus {
 }
 
 enum PaymentStatus {
+  INITIATED
   PENDING
   PAID
   REFUNDED
