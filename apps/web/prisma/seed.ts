@@ -115,6 +115,24 @@ async function main() {
     const ep2 = await prisma.expertProfile.findUnique({ where: { userId: expert2.id } });
 
     if (ep1 && ep2) {
+        // Delete dependent records first to avoid FK constraint violations
+        const existingSlots = await prisma.availabilitySlot.findMany({
+            where: { expertId: { in: [ep1.id, ep2.id] } },
+            select: { id: true },
+        });
+        const slotIds = existingSlots.map((s) => s.id);
+        if (slotIds.length > 0) {
+            const existingBookings = await prisma.booking.findMany({
+                where: { slotId: { in: slotIds } },
+                select: { id: true },
+            });
+            const bookingIds = existingBookings.map((b) => b.id);
+            if (bookingIds.length > 0) {
+                await prisma.payment.deleteMany({ where: { bookingId: { in: bookingIds } } });
+                await prisma.preConsultationForm.deleteMany({ where: { bookingId: { in: bookingIds } } });
+                await prisma.booking.deleteMany({ where: { id: { in: bookingIds } } });
+            }
+        }
         await prisma.availabilitySlot.deleteMany({
             where: { expertId: { in: [ep1.id, ep2.id] } },
         });
