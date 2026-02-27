@@ -1,20 +1,31 @@
 import type { Metadata } from "next";
+import { prisma } from "@/app/lib/prisma";
+import DestinationsClient from "./DestinationsClient";
 
 export const metadata: Metadata = {
     title: "Destinations — GB Guide",
-    description:
-        "Explore stunning destinations across Gilgit-Baltistan: Hunza Valley, Skardu, Fairy Meadows, Naltar, K2 Base Camp, and more.",
+    description: "Explore stunning destinations across Gilgit-Baltistan: Hunza Valley, Skardu, Fairy Meadows, Naltar, K2 Base Camp, and more.",
+    openGraph: {
+        title: "Destinations — GB Guide",
+        description: "Explore stunning destinations across Gilgit-Baltistan.",
+    },
 };
 
-export default function DestinationsPage() {
-    const destinations = [
-        { name: "Hunza Valley", tagline: "The crown jewel of GB", highlights: "Karimabad, Eagle's Nest, Attabad Lake, Passu Cones" },
-        { name: "Skardu", tagline: "Gateway to the world's highest peaks", highlights: "Shangrila Resort, Upper Kachura, Deosai Plains" },
-        { name: "Fairy Meadows", tagline: "The meadow below Nanga Parbat", highlights: "Nanga Parbat Base Camp, Trek, Stargazing" },
-        { name: "Naltar Valley", tagline: "Rainbow Lakes & ski slopes", highlights: "Naltar Lakes, Skiing, Pine Forests" },
-        { name: "Khunjerab Pass", tagline: "World's highest paved border crossing", highlights: "China Border, Yaks, High Altitude Views" },
-        { name: "K2 Base Camp", tagline: "The ultimate mountaineering trek", highlights: "Concordia, Baltoro Glacier, Gondogoro Pass" },
-    ];
+export default async function DestinationsPage() {
+    const destinations = await prisma.destination.findMany({
+        where: { isPublished: true },
+        orderBy: { createdAt: "desc" },
+        select: {
+            id: true,
+            title: true,
+            slug: true,
+            heroImageUrl: true,
+            summary: true,
+            region: true,
+            difficulty: true,
+            bestSeason: true,
+        },
+    });
 
     return (
         <>
@@ -32,27 +43,7 @@ export default function DestinationsPage() {
 
             <section className="section-padding !pt-0">
                 <div className="page-container">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {destinations.map((dest) => (
-                            <div key={dest.name} className="glass rounded-2xl overflow-hidden group hover:border-accent-400/20 transition-all">
-                                <div className="h-48 bg-gradient-to-br from-primary-800/50 to-navy-900/50 flex items-center justify-center">
-                                    <span className="text-5xl">🏔️</span>
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-xl font-heading font-semibold mb-1">{dest.name}</h3>
-                                    <p className="text-accent-400 text-sm font-medium mb-3">{dest.tagline}</p>
-                                    <p className="text-slate-400 text-sm">{dest.highlights}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="mt-10 glass rounded-xl p-6 text-center">
-                        <p className="text-slate-400 text-sm">
-                            🚧 <strong>TODO:</strong> Add destination images, detailed pages,
-                            interactive map, and link to relevant experts.
-                        </p>
-                    </div>
+                    <DestinationsClient destinations={destinations} />
                 </div>
             </section>
         </>

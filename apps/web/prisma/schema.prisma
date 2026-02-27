@@ -226,19 +226,43 @@ model Payment {
   @@map("payments")
 }
 
-// ─── Blog Post (placeholder) ────────────────────────────
+// ─── Blog Post ──────────────────────────────────────────
 
 model BlogPost {
-  id        String         @id @default(cuid())
-  title     String
-  slug      String         @unique
-  content   String?        @db.Text
-  status    BlogPostStatus @default(DRAFT)
-  authorId  String?
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id            String         @id @default(cuid())
+  title         String
+  slug          String         @unique
+  excerpt       String?
+  coverImageUrl String?
+  content       String?        @db.Text
+  status        BlogPostStatus @default(DRAFT)
+  authorId      String?
+  publishedAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   author User? @relation(fields: [authorId], references: [id])
 
+  @@index([status])
   @@map("blog_posts")
+}
+
+// ─── Destination ────────────────────────────────────────
+
+model Destination {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  heroImageUrl  String?
+  summary       String
+  content       String   @db.Text
+  region        String
+  difficulty    String?  // EASY, MODERATE, HARD
+  bestSeason    String?
+  isPublished   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isPublished])
+  @@map("destinations")
 }

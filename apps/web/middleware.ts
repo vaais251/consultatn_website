@@ -14,18 +14,33 @@ const roleRoutes: Record<string, string[]> = {
 export default async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Check if route is protected
+    // ── Security Headers (all responses) ────────────────
+    const response = NextResponse.next();
+
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    response.headers.set(
+        "Permissions-Policy",
+        "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    );
+    response.headers.set("X-XSS-Protection", "1; mode=block");
+    response.headers.set(
+        "Strict-Transport-Security",
+        "max-age=31536000; includeSubDomains"
+    );
+
+    // ── Route Protection ────────────────────────────────
     const isProtected = protectedPrefixes.some((route) =>
         pathname.startsWith(route)
     );
 
-    // Check if route has role requirements
     const roleEntry = Object.entries(roleRoutes).find(([route]) =>
         pathname.startsWith(route)
     );
 
     if (!isProtected && !roleEntry) {
-        return NextResponse.next();
+        return response;
     }
 
     // Use getToken to decode JWT without importing Prisma (Edge-safe)
@@ -51,9 +66,12 @@ export default async function middleware(request: NextRequest) {
         }
     }
 
-    return NextResponse.next();
+    return response;
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/admin/:path*", "/expert/:path*", "/book/:path*"],
+    matcher: [
+        // Security headers for all pages
+        "/((?!_next|api/auth).*)",
+    ],
 };
