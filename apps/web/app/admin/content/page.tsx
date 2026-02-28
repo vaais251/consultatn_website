@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export const metadata = {
-    title: "Content Hub — GB Guide Admin",
+    title: "Content Hub — The North Route Admin",
 };
 
 export default async function ContentHubPage() {
@@ -39,7 +39,7 @@ export default async function ContentHubPage() {
             <div className="mb-8">
                 <h1 className="text-3xl font-heading font-bold mb-2">Content Hub</h1>
                 <p className="text-slate-400">
-                    Create and manage all content for the GB Guide platform.
+                    Create and manage all content for the The North Route platform.
                 </p>
             </div>
 

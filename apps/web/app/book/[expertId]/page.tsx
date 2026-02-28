@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props) {
         select: { name: true },
     });
     return {
-        title: user ? `Book ${user.name} — GB Guide` : "Book Consultation",
+        title: user ? `Book ${user.name} — The North Route` : "Book Consultation",
     };
 }
 

@@ -1,5 +1,5 @@
 /**
- * Optional Sentry integration for GB Guide.
+ * Optional Sentry integration for The North Route.
  * Only initializes if SENTRY_DSN is set and @sentry/nextjs is installed.
  *
  * Usage:

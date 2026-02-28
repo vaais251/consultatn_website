@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Privacy Policy — GB Guide",
-    description: "How GB Guide collects, uses, and protects your personal information.",
+    title: "Privacy Policy — The North Route",
+    description: "How The North Route collects, uses, and protects your personal information.",
 };
 
 export default function PrivacyPage() {
     return (
-        <section className="section-padding">
+        <section className="section-padding" style={{ background: "var(--bg)" }}>
             <div className="page-container max-w-3xl mx-auto">
                 <h1 className="text-4xl font-heading font-bold mb-2">Privacy Policy</h1>
                 <p className="text-slate-500 text-sm mb-10">Last updated: February 2026</p>
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
                 <div className="policy-content space-y-6">
                     <div>
                         <h2>1. Information We Collect</h2>
-                        <p>When you use GB Guide, we collect the following types of information:</p>
+                        <p>When you use The North Route, we collect the following types of information:</p>
                         <ul>
                             <li><strong>Account Information:</strong> Name, email address, country, and password hash when you register.</li>
                             <li><strong>Booking Information:</strong> Travel preferences, consultation details, pre-consultation form responses, and scheduling data.</li>
@@ -42,7 +42,7 @@ export default function PrivacyPage() {
                         <h2>3. Payment Security</h2>
                         <p>
                             All payment transactions are processed through <strong>Stripe</strong>, a PCI DSS Level 1 certified payment processor.
-                            GB Guide does not store, process, or have access to your complete credit card information.
+                            The North Route does not store, process, or have access to your complete credit card information.
                             Your payment data is encrypted end-to-end by Stripe.
                         </p>
                     </div>
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
                         <h2>8. Contact Us</h2>
                         <p>
                             For privacy-related inquiries, please reach out via our <a href="/contact" className="text-accent-400 hover:underline">Contact Page</a> or
-                            email us at <strong>privacy@gbguide.com</strong>.
+                            email us at <strong>privacy@thenorthroute.com</strong>.
                             We aim to respond within 48 hours.
                         </p>
                     </div>

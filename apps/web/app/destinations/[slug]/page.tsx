@@ -15,13 +15,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         select: { title: true, summary: true, heroImageUrl: true },
     });
 
-    if (!dest) return { title: "Destination Not Found — GB Guide" };
+    if (!dest) return { title: "Destination Not Found — The North Route" };
 
     return {
-        title: `${dest.title} — GB Guide`,
+        title: `${dest.title} — The North Route`,
         description: dest.summary,
         openGraph: {
-            title: `${dest.title} — Explore with GB Guide`,
+            title: `${dest.title} — Explore with The North Route`,
             description: dest.summary,
             images: dest.heroImageUrl ? [dest.heroImageUrl] : [],
         },
@@ -110,12 +110,12 @@ export default async function DestinationDetailPage({ params }: Props) {
             </section>
 
             {/* Content */}
-            <section className="section-padding !pt-8">
+            <section className="section-padding !pt-8" style={{ background: "var(--bg)" }}>
                 <div className="page-container">
                     <div className="grid lg:grid-cols-3 gap-10">
                         {/* Main content */}
                         <div className="lg:col-span-2">
-                            <p className="text-lg text-slate-300 leading-relaxed mb-8 border-l-4 border-accent-400 pl-5">
+                            <p className="text-lg text-[var(--text-secondary)] leading-relaxed mb-8 border-l-4 border-accent-400 pl-5">
                                 {destination.summary}
                             </p>
                             <MarkdownRenderer content={destination.content} />
@@ -124,11 +124,11 @@ export default async function DestinationDetailPage({ params }: Props) {
                         {/* Sidebar */}
                         <aside className="space-y-6">
                             {/* CTA */}
-                            <div className="glass rounded-2xl p-6 sticky top-24">
+                            <div className="rounded-2xl p-6 sticky top-24 border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
                                 <h3 className="font-heading font-semibold text-lg mb-3">
                                     Planning a trip here?
                                 </h3>
-                                <p className="text-slate-400 text-sm mb-5 leading-relaxed">
+                                <p className="text-[var(--text-muted)] text-sm mb-5 leading-relaxed">
                                     Book a video consultation with a local expert who knows {destination.region} inside and out.
                                 </p>
                                 <Link href="/experts" className="btn-accent w-full text-sm !py-3">
@@ -140,7 +140,7 @@ export default async function DestinationDetailPage({ params }: Props) {
                             </div>
 
                             {/* Quick Facts */}
-                            <div className="glass rounded-2xl p-6">
+                            <div className="rounded-2xl p-6 border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
                                 <h3 className="font-heading font-semibold text-lg mb-4">Quick Facts</h3>
                                 <div className="space-y-3 text-sm">
                                     <div className="flex justify-between">
@@ -168,7 +168,7 @@ export default async function DestinationDetailPage({ params }: Props) {
 
             {/* Related Destinations */}
             {related.length > 0 && (
-                <section className="section-padding !pt-0">
+                <section className="section-padding !pt-0" style={{ background: "var(--bg)" }}>
                     <div className="page-container">
                         <h2 className="text-2xl font-heading font-bold mb-6">
                             More in <span className="gradient-text">{destination.region}</span>
@@ -178,7 +178,8 @@ export default async function DestinationDetailPage({ params }: Props) {
                                 <Link
                                     key={rel.slug}
                                     href={`/destinations/${rel.slug}`}
-                                    className="glass rounded-2xl overflow-hidden group hover:border-accent-400/20 transition-all"
+                                    className="rounded-2xl overflow-hidden group border border-[var(--border)] hover:border-accent-400/30 transition-all duration-300"
+                                    style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}
                                 >
                                     <div className="h-36 relative overflow-hidden">
                                         {rel.heroImageUrl ? (

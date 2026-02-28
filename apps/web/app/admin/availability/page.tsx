@@ -3,7 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { redirect } from "next/navigation";
 import AvailabilityManager from "./AvailabilityManager";
 
-export const metadata = { title: "Availability Management — GB Guide Admin" };
+export const metadata = { title: "Availability Management — The North Route Admin" };
 
 export default async function AdminAvailabilityPage() {
     const session = await auth();

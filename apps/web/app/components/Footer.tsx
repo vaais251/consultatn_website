@@ -7,7 +7,7 @@ const footerSections = [
             { label: "Destinations", href: "/destinations" },
             { label: "Services & Pricing", href: "/services" },
             { label: "Travel Blog", href: "/blog" },
-            { label: "About & Experts", href: "/about" },
+            { label: "About Us", href: "/about" },
         ],
     },
     {
@@ -29,30 +29,30 @@ const footerSections = [
 
 export default function Footer() {
     return (
-        <footer className="border-t border-white/10 bg-navy-950/80">
+        <footer className="border-t border-[var(--border)]" style={{ background: "var(--footer-bg)" }}>
             <div className="page-container section-padding !pb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
                     {/* Brand */}
                     <div>
                         <Link href="/" className="flex items-center gap-2 mb-4 group">
                             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-400 to-accent-500 flex items-center justify-center text-navy-950 font-bold text-lg font-heading transition-transform group-hover:scale-110">
-                                GB
+                                NR
                             </div>
-                            <span className="text-xl font-heading font-bold text-white">
-                                GB <span className="text-accent-400">Guide</span>
+                            <span className="text-xl font-heading font-bold" style={{ color: "var(--footer-heading)" }}>
+                                the<span className="text-accent-400">north</span>route
                             </span>
                         </Link>
-                        <p className="text-slate-400 text-sm leading-relaxed">
+                        <p className="text-sm leading-relaxed" style={{ color: "var(--footer-text)" }}>
                             Connecting travelers worldwide with trusted local experts from
                             Gilgit-Baltistan. Plan your dream trip with confidence.
                         </p>
-                        {/* Social placeholders */}
                         <div className="flex gap-3 mt-5">
                             {["Twitter", "Instagram", "YouTube"].map((social) => (
                                 <a
                                     key={social}
                                     href="#"
-                                    className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-slate-400 hover:text-accent-400 hover:bg-white/10 transition-all text-xs font-bold"
+                                    className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold transition-all hover:text-accent-400"
+                                    style={{ background: "rgba(255,255,255,0.05)", color: "var(--footer-text)" }}
                                     aria-label={social}
                                 >
                                     {social[0]}
@@ -64,16 +64,13 @@ export default function Footer() {
                     {/* Link columns */}
                     {footerSections.map((section) => (
                         <div key={section.title}>
-                            <h4 className="font-heading font-semibold text-white mb-4 text-sm uppercase tracking-wider">
+                            <h4 className="font-heading font-semibold mb-4 text-sm uppercase tracking-wider" style={{ color: "var(--footer-heading)" }}>
                                 {section.title}
                             </h4>
                             <ul className="space-y-3">
                                 {section.links.map((link) => (
                                     <li key={link.href}>
-                                        <Link
-                                            href={link.href}
-                                            className="text-slate-400 hover:text-accent-400 text-sm transition-colors"
-                                        >
+                                        <Link href={link.href} className="text-sm transition-colors hover:text-accent-400" style={{ color: "var(--footer-text)" }}>
                                             {link.label}
                                         </Link>
                                     </li>
@@ -84,29 +81,20 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom bar */}
-                <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <p className="text-slate-500 text-sm">
-                        © {new Date().getFullYear()} GB Guide. All rights reserved.
+                <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                    <p className="text-sm" style={{ color: "var(--footer-text)" }}>
+                        © {new Date().getFullYear()} The North Route. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-sm">
-                        <Link
-                            href="/privacy"
-                            className="text-slate-500 hover:text-slate-300 transition-colors"
-                        >
-                            Privacy Policy
-                        </Link>
-                        <Link
-                            href="/terms"
-                            className="text-slate-500 hover:text-slate-300 transition-colors"
-                        >
-                            Terms of Service
-                        </Link>
-                        <Link
-                            href="/refund-policy"
-                            className="text-slate-500 hover:text-slate-300 transition-colors"
-                        >
-                            Refund Policy
-                        </Link>
+                        {[
+                            { label: "Privacy Policy", href: "/privacy" },
+                            { label: "Terms of Service", href: "/terms" },
+                            { label: "Refund Policy", href: "/refund-policy" },
+                        ].map((link) => (
+                            <Link key={link.href} href={link.href} className="transition-colors hover:text-accent-400" style={{ color: "var(--footer-text)" }}>
+                                {link.label}
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>

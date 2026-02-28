@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Terms of Service — GB Guide",
-    description: "Terms and conditions governing the use of the GB Guide platform.",
+    title: "Terms of Service — The North Route",
+    description: "Terms and conditions governing the use of the The North Route platform.",
 };
 
 export default function TermsPage() {
     return (
-        <section className="section-padding">
+        <section className="section-padding" style={{ background: "var(--bg)" }}>
             <div className="page-container max-w-3xl mx-auto">
                 <h1 className="text-4xl font-heading font-bold mb-2">Terms of Service</h1>
                 <p className="text-slate-500 text-sm mb-10">Last updated: February 2026</p>
@@ -16,7 +16,7 @@ export default function TermsPage() {
                     <div>
                         <h2>1. Acceptance of Terms</h2>
                         <p>
-                            By accessing or using GB Guide, you agree to be bound by these Terms of Service. If you do not agree to these terms,
+                            By accessing or using The North Route, you agree to be bound by these Terms of Service. If you do not agree to these terms,
                             please do not use our platform.
                         </p>
                     </div>
@@ -24,7 +24,7 @@ export default function TermsPage() {
                     <div>
                         <h2>2. Description of Service</h2>
                         <p>
-                            GB Guide is a platform that connects travelers with verified local experts from Gilgit-Baltistan, Pakistan.
+                            The North Route is a platform that connects travelers with verified local experts from Gilgit-Baltistan, Pakistan.
                             Our experts provide paid video consultations to help you plan your trip with personalized itineraries and insider advice.
                         </p>
                     </div>
@@ -72,7 +72,7 @@ export default function TermsPage() {
                     <div>
                         <h2>7. Expert Standards</h2>
                         <p>
-                            All experts on GB Guide are verified for identity and local knowledge. Experts with the &ldquo;Verified Local Expert&rdquo;
+                            All experts on The North Route are verified for identity and local knowledge. Experts with the &ldquo;Verified Local Expert&rdquo;
                             badge have undergone additional identity and credential checks by our team.
                         </p>
                     </div>
@@ -80,7 +80,7 @@ export default function TermsPage() {
                     <div>
                         <h2>8. Intellectual Property</h2>
                         <p>
-                            All content on GB Guide — including text, images, logos, and design elements — is owned by GB Guide or its content creators.
+                            All content on The North Route — including text, images, logos, and design elements — is owned by The North Route or its content creators.
                             Custom itineraries provided during consultations are for your personal use only and may not be commercially redistributed.
                         </p>
                     </div>
@@ -88,7 +88,7 @@ export default function TermsPage() {
                     <div>
                         <h2>9. Limitation of Liability</h2>
                         <p>
-                            GB Guide serves as a platform connecting travelers with experts. While we verify our experts, we are not responsible for
+                            The North Route serves as a platform connecting travelers with experts. While we verify our experts, we are not responsible for
                             the specific travel advice given during consultations. Travelers should exercise their own judgment regarding travel decisions,
                             safety, and local conditions.
                         </p>
@@ -106,7 +106,7 @@ export default function TermsPage() {
                         <h2>11. Contact Us</h2>
                         <p>
                             If you have questions about these Terms, please visit our <a href="/contact" className="text-accent-400 hover:underline">Contact Page</a> or
-                            email us at <strong>legal@gbguide.com</strong>.
+                            email us at <strong>legal@thenorthroute.com</strong>.
                         </p>
                     </div>
                 </div>

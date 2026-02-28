@@ -56,15 +56,118 @@
   --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.12);
 }
 
-/* ─── Base Styles ────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   THEME TOKENS — Light (default) + Dark
+   ═══════════════════════════════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --bg: #f8f9fc;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-hover: #f1f5f9;
+
+  /* Text */
+  --text: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Borders & dividers */
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.06);
+
+  /* Navbar */
+  --nav-bg: rgba(255, 255, 255, 0.85);
+  --nav-bg-scroll: rgba(255, 255, 255, 0.95);
+  --nav-text: #334155;
+  --nav-text-hover: #1e293b;
+
+  /* Footer */
+  --footer-bg: #1e293b;
+  --footer-text: #94a3b8;
+  --footer-heading: #f8fafc;
+
+  /* Inputs */
+  --input-bg: #f8f9fc;
+  --input-border: #e2e8f0;
+  --input-text: #1e293b;
+
+  /* Hero (always dark-ish for impact) */
+  --hero-bg-from: #0f1225;
+  --hero-bg-via: rgba(15, 19, 64, 0.3);
+  --hero-bg-to: #080a18;
+  --hero-text: #f8fafc;
+  --hero-muted: #cbd5e1;
+}
+
+.dark {
+  --bg: #080a18;
+  --bg-elevated: #0f1225;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+
+  --text: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.04);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  --nav-bg: rgba(8, 10, 24, 0.6);
+  --nav-bg-scroll: rgba(8, 10, 24, 0.9);
+  --nav-text: #cbd5e1;
+  --nav-text-hover: #ffffff;
+
+  --footer-bg: #080a18;
+  --footer-text: #64748b;
+  --footer-heading: #f1f5f9;
+
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-text: #f1f5f9;
+
+  --hero-bg-from: #0f1225;
+  --hero-bg-via: rgba(15, 19, 64, 0.3);
+  --hero-bg-to: #080a18;
+  --hero-text: #f8fafc;
+  --hero-muted: #cbd5e1;
+}
+
+/* ─── Global transitions for theme switching ─────────── */
 html {
   scroll-behavior: smooth;
 }
 
+html,
+body,
+main,
+header,
+footer,
+nav,
+section,
+aside {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
 body {
   font-family: var(--font-body);
-  background: var(--color-navy-950);
-  color: var(--color-slate-100);
+  background: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -76,28 +179,23 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
+  color: var(--text);
 }
 
-/* ─── Utility Classes ────────────────────────────────── */
+/* ─── Glass utility (theme-aware) ────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+/* ─── Gradient text ──────────────────────────────────── */
 .gradient-text {
   background: linear-gradient(135deg, var(--color-accent-400), var(--color-accent-300));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-light {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* ─── Button Variants ────────────────────────────────── */
@@ -155,8 +253,8 @@ h6 {
   font-size: 0.95rem;
   border-radius: 12px;
   background: transparent;
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  border: 2px solid var(--border);
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -237,14 +335,14 @@ h6 {
   padding: 0 1.5rem;
 }
 
-/* ─── Admin Form Inputs ──────────────────────────────── */
+/* ─── Admin / Form Inputs (theme-aware) ──────────────── */
 .admin-input {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
   font-size: 0.95rem;
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
@@ -256,17 +354,17 @@ h6 {
 }
 
 .admin-input::placeholder {
-  color: var(--color-slate-500);
+  color: var(--text-muted);
 }
 
 .admin-input option {
-  background: var(--color-navy-900);
-  color: white;
+  background: var(--bg-elevated);
+  color: var(--text);
 }
 
-/* ─── Markdown Prose Content ─────────────────────────── */
+/* ─── Markdown Prose Content (theme-aware) ───────────── */
 .prose-content {
-  color: var(--color-slate-200);
+  color: var(--text-secondary);
   line-height: 1.8;
   font-size: 1rem;
 }
@@ -276,7 +374,7 @@ h6 {
   font-size: 2rem;
   font-weight: 700;
   margin: 2rem 0 1rem;
-  color: white;
+  color: var(--text);
 }
 
 .prose-content h2 {
@@ -284,7 +382,7 @@ h6 {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 1.75rem 0 0.75rem;
-  color: white;
+  color: var(--text);
 }
 
 .prose-content h3 {
@@ -292,7 +390,7 @@ h6 {
   font-size: 1.25rem;
   font-weight: 600;
   margin: 1.5rem 0 0.5rem;
-  color: white;
+  color: var(--text);
 }
 
 .prose-content p {
@@ -318,12 +416,12 @@ h6 {
 }
 
 .prose-content strong {
-  color: white;
+  color: var(--text);
   font-weight: 600;
 }
 
 .prose-content a {
-  color: var(--color-accent-400);
+  color: var(--color-accent-500);
   text-decoration: underline;
 }
 
@@ -331,19 +429,19 @@ h6 {
   border-left: 3px solid var(--color-accent-400);
   padding-left: 1rem;
   margin: 1rem 0;
-  color: var(--color-slate-300);
+  color: var(--text-muted);
   font-style: italic;
 }
 
 .prose-content code {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
   font-size: 0.9em;
 }
 
 .prose-content pre {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface);
   border-radius: 12px;
   padding: 1rem;
   overflow-x: auto;
@@ -363,19 +461,19 @@ h6 {
 
 .prose-content th,
 .prose-content td {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   padding: 0.5rem 0.75rem;
 }
 
 .prose-content th {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface);
   font-weight: 600;
-  color: white;
+  color: var(--text);
 }
 
 .prose-content hr {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border);
   margin: 2rem 0;
 }
 
@@ -404,13 +502,13 @@ h6 {
   color: var(--color-accent-400);
 }
 
-/* ─── Policy Pages ───────────────────────────────────── */
+/* ─── Policy Pages (theme-aware) ─────────────────────── */
 .policy-content h2 {
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
   margin: 2rem 0 0.75rem;
-  color: white;
+  color: var(--text);
 }
 
 .policy-content h3 {
@@ -418,12 +516,12 @@ h6 {
   font-size: 1.15rem;
   font-weight: 600;
   margin: 1.5rem 0 0.5rem;
-  color: var(--color-slate-200);
+  color: var(--text-secondary);
 }
 
 .policy-content p {
   margin: 0.75rem 0;
-  color: var(--color-slate-300);
+  color: var(--text-secondary);
   line-height: 1.8;
 }
 
@@ -431,9 +529,26 @@ h6 {
   list-style: disc;
   padding-left: 1.5rem;
   margin: 0.5rem 0;
-  color: var(--color-slate-300);
+  color: var(--text-secondary);
 }
 
 .policy-content li {
   margin: 0.35rem 0;
+}
+
+/* ─── Theme Toggle Animation ─────────────────────────── */
+@keyframes spinIn {
+  from {
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-icon-enter {
+  animation: spinIn 0.3s ease-out forwards;
 }

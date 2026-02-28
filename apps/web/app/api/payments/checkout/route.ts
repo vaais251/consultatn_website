@@ -77,7 +77,7 @@ export async function POST(req: Request) {
                     price_data: {
                         currency: "usd",
                         product_data: {
-                            name: `GB Guide — ${label}`,
+                            name: `The North Route — ${label}`,
                             description: `Consultation with ${booking.expert.user.name}`,
                         },
                         unit_amount: amountCents,

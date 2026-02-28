@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Refund Policy — GB Guide",
-    description: "GB Guide refund and cancellation policy for video consultations.",
+    title: "Refund Policy — The North Route",
+    description: "The North Route refund and cancellation policy for video consultations.",
 };
 
 export default function RefundPolicyPage() {
     return (
-        <section className="section-padding">
+        <section className="section-padding" style={{ background: "var(--bg)" }}>
             <div className="page-container max-w-3xl mx-auto">
                 <h1 className="text-4xl font-heading font-bold mb-2">Refund Policy</h1>
                 <p className="text-slate-500 text-sm mb-10">Last updated: February 2026</p>
@@ -63,7 +63,7 @@ export default function RefundPolicyPage() {
                         <p>You can cancel your booking and request a refund through:</p>
                         <ul>
                             <li><strong>Your Dashboard:</strong> Navigate to your booking and click &ldquo;Cancel Booking&rdquo;</li>
-                            <li><strong>Contact Us:</strong> Email <strong>support@gbguide.com</strong> with your booking ID</li>
+                            <li><strong>Contact Us:</strong> Email <strong>support@thenorthroute.com</strong> with your booking ID</li>
                         </ul>
                     </div>
 
@@ -88,7 +88,7 @@ export default function RefundPolicyPage() {
                         <h2>Contact Us</h2>
                         <p>
                             For refund inquiries, visit our <a href="/contact" className="text-accent-400 hover:underline">Contact Page</a> or
-                            email <strong>support@gbguide.com</strong>. We respond within 48 hours.
+                            email <strong>support@thenorthroute.com</strong>. We respond within 48 hours.
                         </p>
                     </div>
                 </div>

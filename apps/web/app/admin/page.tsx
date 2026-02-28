@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export const metadata = {
-    title: "Admin Panel — GB Guide",
+    title: "Admin Panel — The North Route",
 };
 
 export default async function AdminPage() {

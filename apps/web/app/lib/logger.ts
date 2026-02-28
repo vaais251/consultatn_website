@@ -1,5 +1,5 @@
 /**
- * Structured logger for GB Guide
+ * Structured logger for The North Route
  * Outputs JSON logs with level, timestamp, event, and optional metadata.
  * Avoids logging PII beyond email.
  */

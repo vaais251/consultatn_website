@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props) {
         select: { name: true },
     });
     return {
-        title: user ? `${user.name} — GB Guide Expert` : "Expert Profile",
+        title: user ? `${user.name} — The North Route Expert` : "Expert Profile",
         description: user ? `Book a consultation with ${user.name}, a verified local expert from Gilgit-Baltistan.` : "",
     };
 }

@@ -44,11 +44,11 @@ export async function sendClientConfirmation({
 }) {
   await sendEmail({
     to: clientEmail,
-    subject: "Your GB Guide consultation is confirmed ✅",
+    subject: "Your The North Route consultation is confirmed ✅",
     html: `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e1a; color: #e2e8f0; padding: 32px; border-radius: 16px;">
         <div style="text-align: center; margin-bottom: 24px;">
-          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">GB Guide</h1>
+          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">The North Route</h1>
           <p style="color: #94a3b8; font-size: 14px;">Your adventure starts here</p>
         </div>
         <h2 style="color: #ffffff; font-size: 20px;">Booking Confirmed! 🎉</h2>
@@ -67,7 +67,7 @@ export async function sendClientConfirmation({
           <li>Join the meeting 2 minutes early</li>
         </ul>
         <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">
-          Questions? Reply to this email or visit <a href="https://gbguide.local" style="color: #f5c542;">gbguide.local</a>
+          Questions? Reply to this email or visit <a href="https://thenorthroute.com" style="color: #f5c542;">thenorthroute.com</a>
         </p>
       </div>
     `,
@@ -100,7 +100,7 @@ export async function sendExpertNotification({
     html: `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e1a; color: #e2e8f0; padding: 32px; border-radius: 16px;">
         <div style="text-align: center; margin-bottom: 24px;">
-          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">GB Guide</h1>
+          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">The North Route</h1>
           <p style="color: #94a3b8; font-size: 14px;">Expert Dashboard Notification</p>
         </div>
         <h2 style="color: #ffffff; font-size: 20px;">New Booking 💼</h2>
@@ -114,7 +114,7 @@ export async function sendExpertNotification({
         </div>
         <p>Please review the client's pre-consultation form on your dashboard before the session.</p>
         <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">
-          GB Guide Expert Portal
+          The North Route Expert Portal
         </p>
       </div>
     `,
@@ -142,7 +142,7 @@ export async function sendCancellationEmail({
   const html = `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e1a; color: #e2e8f0; padding: 32px; border-radius: 16px;">
         <div style="text-align: center; margin-bottom: 24px;">
-          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">GB Guide</h1>
+          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">The North Route</h1>
         </div>
         <h2 style="color: #ffffff; font-size: 20px;">Booking Cancelled ❌</h2>
         <p>The following consultation has been cancelled:</p>
@@ -153,12 +153,12 @@ export async function sendCancellationEmail({
           <p style="margin: 4px 0;"><strong>📝 Reason:</strong> ${reason}</p>
         </div>
         <p style="color: #94a3b8; font-size: 14px;">If you have questions, please contact support.</p>
-        <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">GB Guide</p>
+        <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">The North Route</p>
       </div>
     `;
 
   await Promise.all([
-    sendEmail({ to: clientEmail, subject: "Your GB Guide booking has been cancelled", html }),
+    sendEmail({ to: clientEmail, subject: "Your The North Route booking has been cancelled", html }),
     sendEmail({ to: expertEmail, subject: `Booking cancelled — ${clientName}`, html }),
   ]);
 }
@@ -184,7 +184,7 @@ export async function sendRescheduleEmail({
   const html = `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #0a0e1a; color: #e2e8f0; padding: 32px; border-radius: 16px;">
         <div style="text-align: center; margin-bottom: 24px;">
-          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">GB Guide</h1>
+          <h1 style="color: #f5c542; font-size: 24px; margin: 0;">The North Route</h1>
         </div>
         <h2 style="color: #ffffff; font-size: 20px;">Booking Rescheduled 🔄</h2>
         <p>A consultation has been rescheduled:</p>
@@ -195,12 +195,12 @@ export async function sendRescheduleEmail({
           <p style="margin: 4px 0; color: #22c55e;"><strong>📅 New time:</strong> ${newDateTime}</p>
         </div>
         <p style="color: #94a3b8; font-size: 14px;">No new payment is required.</p>
-        <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">GB Guide</p>
+        <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">The North Route</p>
       </div>
     `;
 
   await Promise.all([
-    sendEmail({ to: clientEmail, subject: "Your GB Guide booking has been rescheduled", html }),
+    sendEmail({ to: clientEmail, subject: "Your The North Route booking has been rescheduled", html }),
     sendEmail({ to: expertEmail, subject: `Booking rescheduled — ${clientName}`, html }),
   ]);
 }

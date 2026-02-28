@@ -6,7 +6,7 @@ import SignOutButton from "./SignOutButton";
 import ProfileForm from "./ProfileForm";
 
 export const metadata = {
-    title: "Dashboard — GB Guide",
+    title: "Dashboard — The North Route",
     description: "Manage your bookings, view upcoming consultations, and access your custom itineraries.",
 };
 
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
     );
 
     return (
-        <section className="section-padding">
+        <section className="section-padding" style={{ background: "var(--bg)" }}>
             <div className="page-container max-w-6xl mx-auto">
                 {/* Welcome Header */}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
                         <h1 className="text-3xl font-heading font-bold">
                             Welcome back, <span className="gradient-text">{user.name}</span>
                         </h1>
-                        <p className="text-slate-400 mt-1">
+                        <p className="text-[var(--text-muted)] mt-1">
                             {user.role === "ADMIN" && "👑 Administrator"}
                             {user.role === "EXPERT" && "⭐ Expert"}
                             {user.role === "CLIENT" && "✈️ Traveler"}
@@ -88,22 +88,22 @@ export default async function DashboardPage() {
                         { label: "Completed Sessions", value: completed.length.toString(), icon: "✅" },
                         { label: "Total Bookings", value: bookings.length.toString(), icon: "🗺️" },
                     ].map((stat) => (
-                        <div key={stat.label} className="glass rounded-2xl p-6">
+                        <div key={stat.label} className="rounded-2xl p-6 border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
                             <div className="text-2xl mb-2">{stat.icon}</div>
                             <div className="text-3xl font-heading font-bold gradient-text">{stat.value}</div>
-                            <div className="text-slate-400 text-sm mt-1">{stat.label}</div>
+                            <div className="text-[var(--text-muted)] text-sm mt-1">{stat.label}</div>
                         </div>
                     ))}
                 </div>
 
                 {/* My Bookings */}
-                <div className="glass rounded-2xl p-8 mb-8">
+                <div className="rounded-2xl p-8 mb-8 border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
                     <h2 className="text-xl font-heading font-semibold mb-4">My Bookings</h2>
 
                     {bookings.length === 0 ? (
                         <div className="text-center py-12">
                             <div className="text-4xl mb-4">🏔️</div>
-                            <p className="text-slate-400 mb-4">No bookings yet</p>
+                            <p className="text-[var(--text-muted)] mb-4">No bookings yet</p>
                             <Link href="/experts" className="btn-primary text-sm">
                                 Book Your First Consultation
                             </Link>
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm">
                                 <thead>
-                                    <tr className="border-b border-white/10">
+                                    <tr className="border-b border-[var(--border)]">
                                         <th className="text-left py-3 px-4 text-slate-500 font-medium">Date & Time</th>
                                         <th className="text-left py-3 px-4 text-slate-500 font-medium">Expert</th>
                                         <th className="text-left py-3 px-4 text-slate-500 font-medium">Status</th>
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
                                 </thead>
                                 <tbody>
                                     {bookings.map((booking) => (
-                                        <tr key={booking.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <tr key={booking.id} className="border-b border-[var(--border-light)] hover:bg-[var(--surface-hover)] transition-colors">
                                             <td className="py-3 px-4">
                                                 <div className="text-white">
                                                     {new Date(booking.slot.startAt).toLocaleDateString("en-US", {
@@ -183,7 +183,7 @@ export default async function DashboardPage() {
                 </div>
 
                 {/* Profile Section */}
-                <div className="glass rounded-2xl p-8">
+                <div className="rounded-2xl p-8 border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
                     <h2 className="text-xl font-heading font-semibold mb-6">Your Profile</h2>
                     <ProfileForm
                         userId={user.id}

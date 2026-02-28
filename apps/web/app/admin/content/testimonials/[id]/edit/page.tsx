@@ -3,7 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import TestimonialForm from "../../new/Form";
 
-export const metadata = { title: "Edit Testimonial — GB Guide Admin" };
+export const metadata = { title: "Edit Testimonial — The North Route Admin" };
 
 export default async function EditTestimonialPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth();

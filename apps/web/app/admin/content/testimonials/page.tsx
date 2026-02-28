@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import TestimonialPublishToggle from "./PublishToggle";
 
-export const metadata = { title: "Testimonials — GB Guide Admin" };
+export const metadata = { title: "Testimonials — The North Route Admin" };
 
 export default async function AdminTestimonialsPage() {
     const session = await auth();

@@ -55,7 +55,7 @@ export default function NewBlogPostPage() {
         <>
             <div className="mb-8">
                 <h1 className="text-2xl font-heading font-bold mb-1">New Blog Post</h1>
-                <p className="text-slate-400 text-sm">Write a new article for the GB Guide blog.</p>
+                <p className="text-slate-400 text-sm">Write a new article for the The North Route blog.</p>
             </div>
 
             <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">

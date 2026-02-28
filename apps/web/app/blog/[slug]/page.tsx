@@ -22,14 +22,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         select: { title: true, excerpt: true, coverImageUrl: true },
     });
 
-    if (!post) return { title: "Post Not Found — GB Guide" };
+    if (!post) return { title: "Post Not Found — The North Route" };
 
     return {
-        title: `${post.title} — GB Guide Blog`,
-        description: post.excerpt || `Read ${post.title} on the GB Guide travel blog.`,
+        title: `${post.title} — The North Route Blog`,
+        description: post.excerpt || `Read ${post.title} on the The North Route travel blog.`,
         openGraph: {
             title: post.title,
-            description: post.excerpt || `Read ${post.title} on the GB Guide travel blog.`,
+            description: post.excerpt || `Read ${post.title} on the The North Route travel blog.`,
             images: post.coverImageUrl ? [post.coverImageUrl] : [],
             type: "article",
         },
@@ -66,7 +66,7 @@ export default async function BlogPostDetailPage({ params }: Props) {
         author: post.author ? { "@type": "Person", name: post.author.name } : undefined,
         publisher: {
             "@type": "Organization",
-            name: "GB Guide",
+            name: "The North Route",
         },
     };
 
@@ -94,7 +94,7 @@ export default async function BlogPostDetailPage({ params }: Props) {
             </section>
 
             {/* Article */}
-            <section className={`section-padding ${post.coverImageUrl ? "!pt-0 -mt-24 relative z-10" : "!pt-8"}`}>
+            <section className={`section-padding ${post.coverImageUrl ? "!pt-0 -mt-24 relative z-10" : "!pt-8"}`} style={{ background: post.coverImageUrl ? undefined : "var(--bg)" }}>
                 <div className="page-container max-w-3xl mx-auto">
                     {/* Meta */}
                     <Link href="/blog" className="text-sm text-accent-400 hover:text-accent-300 transition-colors mb-6 inline-flex items-center gap-1">
@@ -105,7 +105,7 @@ export default async function BlogPostDetailPage({ params }: Props) {
                         {post.title}
                     </h1>
 
-                    <div className="flex items-center gap-4 text-sm text-slate-400 mb-8 pb-8 border-b border-white/10">
+                    <div className="flex items-center gap-4 text-sm text-[var(--text-muted)] mb-8 pb-8 border-b border-[var(--border)]">
                         {post.author && (
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent-400 to-accent-500 flex items-center justify-center text-navy-950 text-xs font-bold">
@@ -124,11 +124,11 @@ export default async function BlogPostDetailPage({ params }: Props) {
                     {post.content && <MarkdownRenderer content={post.content} />}
 
                     {/* Sticky CTA */}
-                    <div className="mt-12 glass rounded-2xl p-8 text-center">
+                    <div className="mt-12 rounded-2xl p-8 text-center border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}>
                         <h3 className="text-xl font-heading font-bold mb-3">
                             Ready to plan your trip?
                         </h3>
-                        <p className="text-slate-400 mb-5 max-w-lg mx-auto">
+                        <p className="text-[var(--text-muted)] mb-5 max-w-lg mx-auto">
                             Book a video consultation with a verified local expert
                             and get a custom itinerary tailored just for you.
                         </p>
@@ -146,7 +146,7 @@ export default async function BlogPostDetailPage({ params }: Props) {
 
             {/* Related Posts */}
             {related.length > 0 && (
-                <section className="section-padding !pt-0">
+                <section className="section-padding !pt-0" style={{ background: "var(--bg)" }}>
                     <div className="page-container max-w-3xl mx-auto">
                         <h2 className="text-2xl font-heading font-bold mb-6">
                             More from the <span className="gradient-text">Blog</span>
@@ -156,7 +156,8 @@ export default async function BlogPostDetailPage({ params }: Props) {
                                 <Link
                                     key={rel.slug}
                                     href={`/blog/${rel.slug}`}
-                                    className="glass rounded-xl overflow-hidden group hover:border-accent-400/20 transition-all"
+                                    className="rounded-xl overflow-hidden group border border-[var(--border)] hover:border-accent-400/30 transition-all duration-300"
+                                    style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}
                                 >
                                     {rel.coverImageUrl && (
                                         <div className="h-28 overflow-hidden">

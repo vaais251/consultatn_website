@@ -68,24 +68,25 @@ export default function RegisterPage() {
     };
 
     return (
-        <section className="min-h-[85vh] flex items-center justify-center section-padding">
+        <section className="min-h-[85vh] flex items-center justify-center section-padding" style={{ background: "var(--bg)" }}>
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-400 to-accent-500 flex items-center justify-center text-navy-950 font-bold text-xl font-heading transition-transform group-hover:scale-110">
-                            GB
+                            NR
                         </div>
                     </Link>
                     <h1 className="text-3xl font-heading font-bold mb-2">Create Your Account</h1>
-                    <p className="text-slate-400">Join thousands of travelers planning their GB adventure</p>
+                    <p className="text-[var(--text-muted)]">Join thousands of travelers planning their northern adventure</p>
                 </div>
 
-                <div className="glass rounded-2xl p-8">
+                <div className="rounded-2xl p-8 border border-[var(--border)]" style={{ background: "var(--surface)", boxShadow: "var(--shadow-md)" }}>
                     {/* Google OAuth */}
                     <button
                         type="button"
                         onClick={handleGoogleSignIn}
-                        className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors mb-6"
+                        className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-[var(--border)] hover:border-accent-400/30 transition-colors mb-6"
+                        style={{ background: "var(--bg)" }}
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
@@ -98,10 +99,10 @@ export default function RegisterPage() {
 
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-white/10" />
+                            <div className="w-full border-t border-[var(--border)]" />
                         </div>
                         <div className="relative flex justify-center text-xs">
-                            <span className="bg-navy-950 px-4 text-slate-500">or register with email</span>
+                            <span className="px-4 text-[var(--text-muted)]" style={{ background: "var(--surface)" }}>or register with email</span>
                         </div>
                     </div>
 
@@ -114,24 +115,26 @@ export default function RegisterPage() {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="text-sm text-slate-400 block mb-1">Full Name</label>
+                            <label className="text-sm text-[var(--text-muted)] block mb-1">Full Name</label>
                             <input
                                 type="text"
                                 required
                                 value={form.name}
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                                 placeholder="Your full name"
-                                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors"
+                                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] placeholder-[var(--text-muted)] focus:outline-none focus:border-accent-400/50 transition-colors"
+                                style={{ background: "var(--bg)", color: "var(--text)" }}
                             />
                         </div>
 
                         <div>
-                            <label className="text-sm text-slate-400 block mb-1">Country</label>
+                            <label className="text-sm text-[var(--text-muted)] block mb-1">Country</label>
                             <select
                                 required
                                 value={form.country}
                                 onChange={(e) => setForm({ ...form, country: e.target.value })}
-                                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-accent-400/50 transition-colors appearance-none"
+                                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] focus:outline-none focus:border-accent-400/50 transition-colors appearance-none"
+                                style={{ background: "var(--bg)", color: "var(--text)" }}
                             >
                                 <option value="" className="bg-navy-950">Select your country</option>
                                 {countries.map((c) => (
@@ -141,19 +144,20 @@ export default function RegisterPage() {
                         </div>
 
                         <div>
-                            <label className="text-sm text-slate-400 block mb-1">Email</label>
+                            <label className="text-sm text-[var(--text-muted)] block mb-1">Email</label>
                             <input
                                 type="email"
                                 required
                                 value={form.email}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                                 placeholder="you@example.com"
-                                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors"
+                                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] placeholder-[var(--text-muted)] focus:outline-none focus:border-accent-400/50 transition-colors"
+                                style={{ background: "var(--bg)", color: "var(--text)" }}
                             />
                         </div>
 
                         <div>
-                            <label className="text-sm text-slate-400 block mb-1">Password</label>
+                            <label className="text-sm text-[var(--text-muted)] block mb-1">Password</label>
                             <input
                                 type="password"
                                 required
@@ -161,7 +165,8 @@ export default function RegisterPage() {
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                                 placeholder="Min. 8 characters"
-                                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors"
+                                className="w-full px-4 py-3 rounded-xl border border-[var(--border)] placeholder-[var(--text-muted)] focus:outline-none focus:border-accent-400/50 transition-colors"
+                                style={{ background: "var(--bg)", color: "var(--text)" }}
                             />
                         </div>
 
@@ -184,7 +189,7 @@ export default function RegisterPage() {
                         </button>
                     </form>
 
-                    <p className="text-slate-500 text-sm text-center mt-6">
+                    <p className="text-[var(--text-muted)] text-sm text-center mt-6">
                         Already have an account?{" "}
                         <Link href="/login" className="text-accent-400 hover:underline">
                             Sign in

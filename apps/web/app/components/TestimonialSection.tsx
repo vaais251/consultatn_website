@@ -16,10 +16,6 @@ interface TestimonialSectionProps {
     limit?: number;
 }
 
-/**
- * Server component: fetches and renders published testimonials.
- * Reusable on home, experts, and services pages.
- */
 export default async function TestimonialSection({
     title = "What Travelers Say",
     subtitle = "Trusted by adventurers from around the world",
@@ -34,7 +30,7 @@ export default async function TestimonialSection({
     if (testimonials.length === 0) return null;
 
     return (
-        <section className="section-padding">
+        <section className="section-padding" style={{ background: "var(--bg)" }}>
             <div className="page-container">
                 <div className="text-center mb-10">
                     <h2 className="text-3xl md:text-4xl font-heading font-bold mb-3">
@@ -46,22 +42,23 @@ export default async function TestimonialSection({
                             )
                         )}
                     </h2>
-                    <p className="text-slate-400 max-w-xl mx-auto">{subtitle}</p>
+                    <p className="text-[var(--text-muted)] max-w-xl mx-auto">{subtitle}</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                     {testimonials.map((t) => (
                         <div
                             key={t.id}
-                            className="glass rounded-2xl p-6 hover:border-accent-400/20 transition-all flex flex-col"
+                            className="rounded-2xl p-6 transition-all flex flex-col border border-[var(--border)] hover:border-accent-400/30"
+                            style={{ background: "var(--surface)", boxShadow: "var(--shadow-sm)" }}
                         >
                             <StarRating rating={t.rating} />
-                            <blockquote className="text-slate-300 text-sm leading-relaxed mt-3 mb-4 flex-1">
+                            <blockquote className="text-[var(--text-secondary)] text-sm leading-relaxed mt-3 mb-4 flex-1">
                                 &ldquo;{t.quote}&rdquo;
                             </blockquote>
-                            <div className="border-t border-white/5 pt-4 mt-auto">
+                            <div className="border-t border-[var(--border)] pt-4 mt-auto">
                                 <p className="font-heading font-semibold text-sm">{t.name}</p>
-                                <p className="text-slate-500 text-xs">
+                                <p className="text-[var(--text-muted)] text-xs">
                                     📍 {t.country}
                                     {t.tripType && <> · {t.tripType}</>}
                                 </p>

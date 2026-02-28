@@ -2,7 +2,7 @@ import { auth } from "@/app/lib/auth";
 import { redirect } from "next/navigation";
 import TestimonialForm from "./Form";
 
-export const metadata = { title: "New Testimonial — GB Guide Admin" };
+export const metadata = { title: "New Testimonial — The North Route Admin" };
 
 export default async function NewTestimonialPage() {
     const session = await auth();
