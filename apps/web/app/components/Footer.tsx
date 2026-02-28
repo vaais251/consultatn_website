@@ -89,18 +89,24 @@ export default function Footer() {
                         © {new Date().getFullYear()} GB Guide. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-sm">
-                        <a
-                            href="#"
+                        <Link
+                            href="/privacy"
                             className="text-slate-500 hover:text-slate-300 transition-colors"
                         >
                             Privacy Policy
-                        </a>
-                        <a
-                            href="#"
+                        </Link>
+                        <Link
+                            href="/terms"
                             className="text-slate-500 hover:text-slate-300 transition-colors"
                         >
                             Terms of Service
-                        </a>
+                        </Link>
+                        <Link
+                            href="/refund-policy"
+                            className="text-slate-500 hover:text-slate-300 transition-colors"
+                        >
+                            Refund Policy
+                        </Link>
                     </div>
                 </div>
             </div>

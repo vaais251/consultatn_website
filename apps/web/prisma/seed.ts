@@ -301,6 +301,71 @@ async function main() {
     });
     console.log(`✅ Created ${blogPosts.count} blog posts`);
 
+    // ─── Testimonials ────────────────────────────────────
+    await prisma.testimonial.deleteMany({});
+    const testimonials = await prisma.testimonial.createMany({
+        data: [
+            {
+                name: "Sarah Mitchell",
+                country: "United States",
+                quote: "Our video consultation with Ahmad was incredible. He planned a 10-day itinerary that took us through hidden valleys and local villages that we never would have found on our own. Worth every penny!",
+                rating: 5,
+                tripType: "Hunza Valley trek",
+                isPublished: true,
+            },
+            {
+                name: "Marco Rossi",
+                country: "Italy",
+                quote: "Fatima's cultural knowledge transformed our trip from a simple vacation into a deep cultural experience. The photography spots she recommended were absolutely stunning.",
+                rating: 5,
+                tripType: "Photography expedition",
+                isPublished: true,
+            },
+            {
+                name: "Yuki Tanaka",
+                country: "Japan",
+                quote: "As a solo female traveler, I was nervous about visiting GB alone. The expert consultation gave me the confidence and practical tips I needed. The locals were incredibly welcoming.",
+                rating: 5,
+                tripType: "Solo adventure",
+                isPublished: true,
+            },
+            {
+                name: "James O'Brien",
+                country: "Australia",
+                quote: "The K2 Base Camp trek planning session was exactly what I needed. Ahmad walked me through gear lists, permit processes, and daily itineraries. Couldn't have done it without him.",
+                rating: 4,
+                tripType: "K2 Base Camp trek",
+                isPublished: false,
+            },
+            {
+                name: "Priya Sharma",
+                country: "India",
+                quote: "We booked a family tour consultation and got a perfectly tailored itinerary that kept our kids engaged and the parents amazed. The visa guidance was particularly helpful.",
+                rating: 5,
+                tripType: "Family tour",
+                isPublished: false,
+            },
+            {
+                name: "Erik Johansson",
+                country: "Sweden",
+                quote: "I've used travel consultants before, but the local expertise here is unmatched. They know every trail, every guesthouse, every shortcut. Truly invaluable.",
+                rating: 4,
+                tripType: "Trekking & adventure",
+                isPublished: false,
+            },
+        ],
+    });
+    console.log(`✅ Created ${testimonials.count} testimonials`);
+
+    // ─── Set Expert 1 as Verified ────────────────────────
+    if (ep1) {
+        await prisma.expertProfile.update({
+            where: { id: ep1.id },
+            data: { isVerified: true, verifiedAt: new Date() },
+        });
+        console.log(`✅ Expert Ahmad Khan marked as verified`);
+    }
+
     console.log("\n✨ Seed complete!");
     console.log("\n📋 Test Credentials:");
     console.log("   Admin:  admin@gbguide.local / admin123!");

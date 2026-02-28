@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import TestimonialSection from "@/app/components/TestimonialSection";
 
 export const metadata: Metadata = {
     title: "Services & Pricing — GB Guide",
@@ -53,8 +54,8 @@ export default function ServicesPage() {
                             <div
                                 key={plan.name}
                                 className={`rounded-2xl p-8 transition-all ${plan.popular
-                                        ? "bg-gradient-to-b from-primary-900/80 to-primary-950/80 border-2 border-accent-400/30 scale-105"
-                                        : "glass"
+                                    ? "bg-gradient-to-b from-primary-900/80 to-primary-950/80 border-2 border-accent-400/30 scale-105"
+                                    : "glass"
                                     }`}
                             >
                                 {plan.popular && (
@@ -96,6 +97,12 @@ export default function ServicesPage() {
                     </div>
                 </div>
             </section>
+
+            {/* Trust Section */}
+            <TestimonialSection
+                title="Why Travelers Choose Us"
+                subtitle="Real feedback from travelers who booked consultations."
+            />
         </>
     );
 }

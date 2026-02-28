@@ -136,18 +136,21 @@ model ClientProfile {
 // ─── Expert Profile ─────────────────────────────────────
 
 model ExpertProfile {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  photoUrl    String?
-  bio         String?  @db.Text
-  credentials String?  @db.Text
-  languages   String?
-  region      String?
-  specialty   String?
-  hourlyRate  Float?   @default(50)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  photoUrl           String?
+  bio                String?   @db.Text
+  credentials        String?   @db.Text
+  languages          String?
+  region             String?
+  specialty          String?
+  hourlyRate         Float?    @default(50)
+  isActive           Boolean   @default(true)
+  isVerified         Boolean   @default(false)
+  verifiedAt         DateTime?
+  verificationNotes  String?   @db.Text
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   bookings          Booking[]          @relation("ExpertBookings")
@@ -279,4 +282,21 @@ model Destination {
 
   @@index([isPublished])
   @@map("destinations")
+}
+
+// ─── Testimonial ────────────────────────────────────────
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  country     String
+  quote       String   @db.Text
+  rating      Int      @default(5)
+  tripType    String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished])
+  @@map("testimonials")
 }

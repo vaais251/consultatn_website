@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/app/lib/prisma";
+import TestimonialSection from "@/app/components/TestimonialSection";
 
 export const metadata: Metadata = {
   title: "GB Guide — Expert Travel Consultancy for Gilgit-Baltistan",
@@ -216,6 +217,12 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      {/* ─── Testimonials ──────────────────────────────── */}
+      <TestimonialSection
+        title="Trusted by Travelers"
+        subtitle="See what adventurers from around the world say about their GB Guide experience."
+      />
 
       {/* ─── CTA Banner ────────────────────────────────── */}
       <section className="section-padding">

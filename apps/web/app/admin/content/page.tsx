@@ -25,6 +25,13 @@ export default async function ContentHubPage() {
             icon: "📰",
             count: null,
         },
+        {
+            title: "Testimonials",
+            description: "Manage traveler testimonials — publish featured reviews on public pages.",
+            href: "/admin/content/testimonials",
+            icon: "💬",
+            count: null,
+        },
     ];
 
     return (

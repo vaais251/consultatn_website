@@ -1,5 +1,7 @@
 import { prisma } from "@/app/lib/prisma";
 import Link from "next/link";
+import VerifiedBadge from "@/app/components/VerifiedBadge";
+import TestimonialSection from "@/app/components/TestimonialSection";
 
 export const metadata = {
     title: "Our Experts — GB Guide",
@@ -50,10 +52,11 @@ export default async function ExpertsPage() {
                                             .map((w) => w[0])
                                             .join("")}
                                     </div>
-                                    <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                        Verified
-                                    </div>
+                                    {expert.isVerified && (
+                                        <div className="absolute top-4 right-4">
+                                            <VerifiedBadge />
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Content */}
@@ -141,6 +144,12 @@ export default async function ExpertsPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Testimonials */}
+                <TestimonialSection
+                    title="Trusted by Travelers"
+                    subtitle="Hear from adventurers who planned their trips with our experts."
+                />
             </div>
         </section>
     );
