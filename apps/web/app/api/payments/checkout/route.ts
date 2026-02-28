@@ -2,12 +2,24 @@ import { NextResponse } from "next/server";
 import { auth } from "@/app/lib/auth";
 import { prisma } from "@/app/lib/prisma";
 import { stripe, getAmountForDuration } from "@/app/lib/stripe";
+import { checkoutLimiter, getClientIp } from "@/app/lib/rate-limit";
+import { logger } from "@/app/lib/logger";
 
 export async function POST(req: Request) {
     try {
         const session = await auth();
         if (!session?.user?.id) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: { code: "UNAUTHORIZED", message: "Unauthorized" } }, { status: 401 });
+        }
+
+        // Rate limit check
+        const ip = getClientIp(req);
+        if (checkoutLimiter.check(ip, "/api/payments/checkout")) {
+            logger.rateLimited(ip, "/api/payments/checkout");
+            return NextResponse.json(
+                { error: { code: "RATE_LIMITED", message: "Too many requests. Please try again shortly." } },
+                { status: 429 },
+            );
         }
 
         const body = await req.json();
@@ -103,9 +115,11 @@ export async function POST(req: Request) {
             });
         }
 
+        logger.checkoutSessionCreated(booking.id, checkoutSession.id);
+
         return NextResponse.json({ url: checkoutSession.url });
     } catch (error) {
-        console.error("Checkout error:", error);
-        return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 });
+        logger.error("checkout.failed", { error: String(error) });
+        return NextResponse.json({ error: { code: "INTERNAL", message: "Failed to create checkout session" } }, { status: 500 });
     }
 }

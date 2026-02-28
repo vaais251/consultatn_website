@@ -23,11 +23,15 @@ enum BookingStatus {
   PENDING_PAYMENT
   CONFIRMED
   CANCELLED
+  EXPIRED
   COMPLETED
+  REFUND_PENDING
+  REFUNDED
 }
 
 enum AvailabilityStatus {
   AVAILABLE
+  RESERVED
   BOOKED
   BLOCKED
 }
@@ -155,33 +159,39 @@ model ExpertProfile {
 // ─── Availability Slot ──────────────────────────────────
 
 model AvailabilitySlot {
-  id        String             @id @default(cuid())
-  expertId  String
-  startAt   DateTime
-  endAt     DateTime
-  status    AvailabilityStatus @default(AVAILABLE)
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
+  id                   String             @id @default(cuid())
+  expertId             String
+  startAt              DateTime
+  endAt                DateTime
+  status               AvailabilityStatus @default(AVAILABLE)
+  reservedUntil        DateTime?
+  reservedByBookingId  String?            @unique
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
 
   expert  ExpertProfile @relation(fields: [expertId], references: [id], onDelete: Cascade)
   booking Booking?
 
   @@index([expertId, startAt])
+  @@index([status, reservedUntil])
   @@map("availability_slots")
 }
 
 // ─── Booking ────────────────────────────────────────────
 
 model Booking {
-  id          String        @id @default(cuid())
-  clientId    String
-  expertId    String
-  slotId      String        @unique
-  status      BookingStatus @default(PENDING_PAYMENT)
-  meetingLink String?
-  notes       String?       @db.Text
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                       String        @id @default(cuid())
+  clientId                 String
+  expertId                 String
+  slotId                   String        @unique
+  status                   BookingStatus @default(PENDING_PAYMENT)
+  meetingLink              String?
+  notes                    String?       @db.Text
+  cancelledAt              DateTime?
+  cancelReason             String?
+  rescheduledFromBookingId String?
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
 
   client              User                 @relation("ClientBookings", fields: [clientId], references: [id])
   expert              ExpertProfile        @relation("ExpertBookings", fields: [expertId], references: [id])
@@ -211,15 +221,19 @@ model PreConsultationForm {
 // ─── Payment (placeholder) ──────────────────────────────
 
 model Payment {
-  id                String        @id @default(cuid())
-  bookingId         String        @unique
-  provider          String        @default("stripe")
-  amountUsd         Float
-  currency          String        @default("USD")
-  status            PaymentStatus @default(PENDING)
-  providerSessionId String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id                      String        @id @default(cuid())
+  bookingId               String        @unique
+  provider                String        @default("stripe")
+  amountUsd               Float
+  currency                String        @default("USD")
+  status                  PaymentStatus @default(PENDING)
+  providerSessionId       String?
+  providerPaymentIntentId String?
+  refundedAt              DateTime?
+  refundId                String?
+  refundAmountUsd         Float?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 

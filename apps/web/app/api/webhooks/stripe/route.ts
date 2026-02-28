@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { stripe } from "@/app/lib/stripe";
+import { logger } from "@/app/lib/logger";
 import { generateMeetingLink } from "@/app/lib/meeting";
 import { sendClientConfirmation, sendExpertNotification } from "@/app/lib/email";
 import Stripe from "stripe";
@@ -13,68 +14,86 @@ export async function POST(req: Request) {
         const signature = req.headers.get("stripe-signature");
 
         if (!signature) {
-            return NextResponse.json({ error: "Missing signature" }, { status: 400 });
+            return NextResponse.json({ error: { code: "BAD_REQUEST", message: "Missing signature" } }, { status: 400 });
         }
 
         const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
         if (!webhookSecret) {
-            console.error("STRIPE_WEBHOOK_SECRET not configured");
-            return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+            logger.error("webhook.config.missing", { detail: "STRIPE_WEBHOOK_SECRET not configured" });
+            return NextResponse.json({ error: { code: "CONFIG", message: "Webhook not configured" } }, { status: 500 });
         }
 
         event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
-        console.error("Webhook signature verification failed:", err);
-        return NextResponse.json({ error: "Webhook signature verification failed" }, { status: 400 });
+        logger.error("webhook.signature.failed", { error: String(err) });
+        return NextResponse.json({ error: { code: "SIGNATURE", message: "Webhook signature verification failed" } }, { status: 400 });
     }
 
-    // Handle events
+    // Handle checkout completion
     if (event.type === "checkout.session.completed") {
         const session = event.data.object as Stripe.Checkout.Session;
         const bookingId = session.metadata?.bookingId;
 
         if (!bookingId) {
-            console.warn("Webhook: No bookingId in metadata");
+            logger.warn("webhook.no-booking-id", { sessionId: session.id });
             return NextResponse.json({ received: true });
         }
 
         try {
-            // Fetch booking with relations
             const booking = await prisma.booking.findUnique({
                 where: { id: bookingId },
                 include: {
                     slot: true,
                     expert: { include: { user: { select: { name: true, email: true } } } },
                     payment: true,
-                    client: true, // the User who booked
+                    client: true,
                 },
             });
 
             if (!booking) {
-                console.warn(`Webhook: Booking ${bookingId} not found`);
+                logger.warn("webhook.booking-not-found", { bookingId });
                 return NextResponse.json({ received: true });
             }
 
             // Idempotency: skip if already confirmed
             if (booking.status === "CONFIRMED" && booking.payment?.status === "PAID") {
-                console.log(`Webhook: Booking ${bookingId} already confirmed, skipping`);
+                logger.info("webhook.idempotent-skip", { bookingId });
                 return NextResponse.json({ received: true });
             }
 
-            // Generate meeting link
+            // Reject if booking expired
+            if (booking.status === "EXPIRED") {
+                logger.warn("webhook.payment-after-expiry", { bookingId });
+                // TODO: auto-refund via Stripe if payment came after expiry
+                return NextResponse.json({ received: true });
+            }
+
             const meetingLink = booking.meetingLink || generateMeetingLink(bookingId);
 
-            // Update DB: Payment → PAID, Booking → CONFIRMED, set meetingLink
+            // Transaction: Payment → PAID, Booking → CONFIRMED, Slot → BOOKED (clear reservation)
             await prisma.$transaction([
                 prisma.payment.update({
                     where: { bookingId },
-                    data: { status: "PAID" },
+                    data: {
+                        status: "PAID",
+                        providerPaymentIntentId: session.payment_intent as string || null,
+                    },
                 }),
                 prisma.booking.update({
                     where: { id: bookingId },
                     data: { status: "CONFIRMED", meetingLink },
                 }),
+                prisma.availabilitySlot.update({
+                    where: { id: booking.slotId },
+                    data: {
+                        status: "BOOKED",
+                        reservedUntil: null,
+                        // Keep reservedByBookingId for audit trail
+                    },
+                }),
             ]);
+
+            logger.paymentConfirmed(bookingId, booking.payment?.amountUsd || 0);
 
             // Format date/time for emails
             const dateTime = new Intl.DateTimeFormat("en-US", {
@@ -108,10 +127,9 @@ export async function POST(req: Request) {
                 }),
             ]);
 
-            console.log(`✅ Booking ${bookingId} confirmed via Stripe webhook`);
+            logger.info("webhook.booking-confirmed", { bookingId });
         } catch (err) {
-            console.error(`Webhook processing error for booking ${bookingId}:`, err);
-            // Still return 200 to prevent Stripe retries that would fail the same way
+            logger.error("webhook.processing-error", { bookingId, error: String(err) });
             return NextResponse.json({ received: true });
         }
     }

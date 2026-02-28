@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
     title: "Contact & FAQ — GB Guide",
@@ -23,30 +23,8 @@ export default function ContactPage() {
 
             <section className="section-padding !pt-0">
                 <div className="page-container max-w-4xl mx-auto grid md:grid-cols-2 gap-10">
-                    {/* Contact Form Placeholder */}
-                    <div className="glass rounded-2xl p-8">
-                        <h2 className="text-xl font-heading font-semibold mb-6">Send a Message</h2>
-                        <form className="space-y-4">
-                            <div>
-                                <label className="text-sm text-slate-400 block mb-1">Your Name</label>
-                                <input type="text" placeholder="John Doe" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors" />
-                            </div>
-                            <div>
-                                <label className="text-sm text-slate-400 block mb-1">Email</label>
-                                <input type="email" placeholder="john@example.com" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors" />
-                            </div>
-                            <div>
-                                <label className="text-sm text-slate-400 block mb-1">Message</label>
-                                <textarea rows={4} placeholder="How can we help?" className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-accent-400/50 transition-colors resize-none" />
-                            </div>
-                            <button type="button" className="btn-accent w-full">
-                                Send Message
-                            </button>
-                        </form>
-                        <p className="text-slate-500 text-xs mt-3 text-center">
-                            🚧 Form submission coming soon
-                        </p>
-                    </div>
+                    {/* Contact Form */}
+                    <ContactForm />
 
                     {/* FAQ */}
                     <div>

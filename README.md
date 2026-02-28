@@ -131,3 +131,46 @@ npm run lint     # Run ESLint
 ### Database connection errors
 - Wait for the `db` service health check to pass
 - Check `docker compose logs db` for PostgreSQL errors
+
+## Database Migration Discipline
+
+| Environment | Command | When |
+|-------------|---------|------|
+| **Development** | `npx prisma migrate dev --name description` | After schema changes |
+| **Production** | `npx prisma migrate deploy` | On deploy |
+| **Emergency** | `npx prisma db push` | Only if migrations are broken |
+
+> ⚠️ Never use `prisma migrate dev` in production — it can reset data.
+> Always review migration SQL files before deploying.
+
+## Cron Jobs
+
+### Reservation Expiry
+
+Expired reservations must be cleaned up periodically. Call this endpoint every 2–5 minutes:
+
+```
+GET /api/cron/expire-reservations?token=YOUR_CRON_TOKEN
+```
+
+Set `CRON_TOKEN` in your environment variables.
+
+**Platform examples:**
+
+| Platform | Setup |
+|----------|-------|
+| **Vercel** | Add to `vercel.json` crons config |
+| **Coolify** | Docker cron or external curl-based cron |
+| **Self-hosted** | `crontab -e` → `*/5 * * * * curl -s https://yourdomain.com/api/cron/expire-reservations?token=...` |
+
+## Database Backups
+
+```bash
+# Manual backup
+./infra/scripts/backup-db.sh
+
+# Schedule daily at 2 AM:
+0 2 * * * /path/to/project/infra/scripts/backup-db.sh >> /var/log/gb-backup.log 2>&1
+```
+
+See [`infra/DEPLOYMENT_CHECKLIST.md`](infra/DEPLOYMENT_CHECKLIST.md) for the full deployment guide.

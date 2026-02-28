@@ -3,6 +3,8 @@ import { prisma } from "@/app/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import PayNowButton from "./PayNowButton";
+import CancelButton from "./CancelButton";
+import RefundButton from "./RefundButton";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -14,6 +16,9 @@ const statusColors: Record<string, string> = {
     CONFIRMED: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     COMPLETED: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     CANCELLED: "bg-red-500/20 text-red-400 border-red-500/30",
+    EXPIRED: "bg-slate-500/20 text-slate-400 border-slate-500/30",
+    REFUND_PENDING: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    REFUNDED: "bg-purple-500/20 text-purple-400 border-purple-500/30",
     DRAFT: "bg-slate-500/20 text-slate-400 border-slate-500/30",
 };
 
@@ -22,6 +27,9 @@ const statusLabels: Record<string, string> = {
     CONFIRMED: "Confirmed",
     COMPLETED: "Completed",
     CANCELLED: "Cancelled",
+    EXPIRED: "Expired",
+    REFUND_PENDING: "Refund Pending",
+    REFUNDED: "Refunded",
     DRAFT: "Draft",
 };
 
@@ -135,10 +143,10 @@ export default async function BookingDetailPage({ params, searchParams }: Props)
                                         <p className="text-slate-500 text-xs">via {booking.payment.provider}</p>
                                     </div>
                                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${booking.payment.status === "PAID"
-                                            ? "bg-emerald-500/20 text-emerald-400"
-                                            : booking.payment.status === "INITIATED"
-                                                ? "bg-amber-500/20 text-amber-400"
-                                                : "bg-slate-500/20 text-slate-400"
+                                        ? "bg-emerald-500/20 text-emerald-400"
+                                        : booking.payment.status === "INITIATED"
+                                            ? "bg-amber-500/20 text-amber-400"
+                                            : "bg-slate-500/20 text-slate-400"
                                         }`}>
                                         {booking.payment.status}
                                     </span>
@@ -187,6 +195,53 @@ export default async function BookingDetailPage({ params, searchParams }: Props)
                                         Meeting link will be sent before your session.
                                     </p>
                                 )}
+                            </div>
+                        )}
+
+                        {/* Refunded info */}
+                        {booking.status === "REFUNDED" && (
+                            <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                                <p className="text-purple-400 text-sm font-medium">💰 This booking has been refunded</p>
+                                {booking.payment?.refundedAt && (
+                                    <p className="text-slate-400 text-xs mt-1">
+                                        Refunded on {formatDate(booking.payment.refundedAt)}
+                                        {booking.payment.refundAmountUsd && ` — $${booking.payment.refundAmountUsd} USD`}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Expired info */}
+                        {booking.status === "EXPIRED" && (
+                            <div className="p-4 rounded-xl bg-slate-500/10 border border-slate-500/20">
+                                <p className="text-slate-400 text-sm font-medium">⏰ This reservation expired</p>
+                                <p className="text-slate-500 text-xs mt-1">
+                                    Payment was not completed within the reservation window. You can create a new booking.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Action buttons for CONFIRMED bookings */}
+                        {booking.status === "CONFIRMED" && booking.clientId === session.user.id && (
+                            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                                <p className="text-slate-400 text-xs mb-3">Booking Actions</p>
+                                <div className="flex flex-wrap gap-3">
+                                    <CancelButton bookingId={booking.id} />
+                                    <Link
+                                        href={`/dashboard/bookings/${booking.id}/reschedule`}
+                                        className="px-4 py-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 text-sm font-medium hover:bg-blue-500/20 transition-colors"
+                                    >
+                                        🔄 Reschedule
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Admin: Refund button */}
+                        {session.user.role === "ADMIN" && ["CONFIRMED", "CANCELLED"].includes(booking.status) && booking.payment?.status === "PAID" && (
+                            <div className="p-4 rounded-xl bg-white/5 border border-amber-500/20">
+                                <p className="text-amber-400 text-xs uppercase tracking-wider mb-2">Admin Actions</p>
+                                <RefundButton bookingId={booking.id} />
                             </div>
                         )}
                     </div>

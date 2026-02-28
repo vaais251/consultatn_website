@@ -4,7 +4,9 @@ if (!process.env.STRIPE_SECRET_KEY) {
     console.warn("⚠️  STRIPE_SECRET_KEY not set — Stripe calls will fail");
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+// Use a placeholder key during build to prevent SDK constructor crash.
+// Actual API calls will fail gracefully if the key is invalid.
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_placeholder_not_configured", {
     typescript: true,
 });
 
